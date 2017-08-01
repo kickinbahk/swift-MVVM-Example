@@ -54,7 +54,7 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
   fileprivate func startTimer() {
     let interval: TimeInterval = 0.001
     gameTimer = Timer.schedule(repeatInterval: interval) { timer in
-      self.game.time
+      self.game.time += interval
       self.time = GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: self.game)
     }
   }
