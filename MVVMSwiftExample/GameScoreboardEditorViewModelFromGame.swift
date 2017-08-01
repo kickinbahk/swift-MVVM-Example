@@ -50,23 +50,37 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
     self.isPaused = true
   }
   
+  fileprivate var gameTimer: Timer?
+  fileprivate func startTimer() {
+    let interval: TimeInterval = 0.001
+    gameTimer = Timer.schedule(repeatInterval: interval) { timer in
+      self.game.time
+      self.time = GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: self.game)
+    }
+  }
   
+  fileprivate func pauseTimer() {
+    gameTimer?.invalidate()
+    gameTimer = nil
+  }
   
+  fileprivate static func timeFormatted(totalMillis: Int) -> String {
+    let millis: Int = totalMillis % 1000 / 100  // "/ 100" <- Because we only want one digit
+    let totalSeconds: Int = totalMillis / 1000
+    
+    let seconds: Int = totalSeconds % 60
+    let minutes: Int = (totalSeconds / 60)
+    
+    return String(format: "\(minutes):\(seconds).\(millis)")
+  }
+  
+  fileprivate static func timeRemainingPretty(for game: Game) -> String {
+    return timeFormatted(totalMillis: Int(game.time * 1000))
+  }
+  
+  fileprivate static func scorePretty(for game: Game) -> String {
+    return String(format: "\(game.homeTeamScore) - \(game.awayTeamScore)")
+  }
   
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
