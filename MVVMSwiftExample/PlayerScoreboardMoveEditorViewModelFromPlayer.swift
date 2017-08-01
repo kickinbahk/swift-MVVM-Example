@@ -12,7 +12,7 @@ class PlayerScoreboardMoveEditorViewModelFromPlayer: NSObject, PlayerScoreboardM
   fileprivate let player: Player
   fileprivate let game: Game
   
-  let var playerName: String
+  let playerName: String
   
   var onePointMoveCount: String
   var twoPointMoveCount: String
