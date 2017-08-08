@@ -22,23 +22,23 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
   var homeTeam: String
   var awayTeam: String
   
-  var time: String
-  var score: String
+  var time: Dynamic<String>
+  var score: Dynamic<String>
 
-  var isFinished: Bool
-  var isPaused: Bool
+  var isFinished: Dynamic<Bool>
+  var isPaused: Dynamic<Bool>
   
   var homePlayers: [PlayerScoreboardMoveEditorViewModel]
   var awayPlayers: [PlayerScoreboardMoveEditorViewModel]
   
   func togglePause() {
-    if isPaused {
+    if isPaused.value {
       startTimer()
     } else {
       pauseTimer()
     }
     
-    self.isPaused = !isPaused
+    self.isPaused.value = !isPaused.value
   }
   
   init(withGame game: Game) {
@@ -52,10 +52,10 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
     self.awayPlayers = GameScoreboardEditorViewModelFromGame.playerViewModels(from: game.awayTeam.players,
                                                                            game: game)
     
-    self.time = GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: game)
-    self.score = GameScoreboardEditorViewModelFromGame.scorePretty(for: game)
-    self.isFinished = game.isFinished
-    self.isPaused = true
+    self.time = Dynamic(GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: game))
+    self.score = Dynamic(GameScoreboardEditorViewModelFromGame.scorePretty(for: game))
+    self.isFinished = Dynamic(game.isFinished)
+    self.isPaused = Dynamic(true)
   }
   
   fileprivate var gameTimer: Timer?
@@ -63,7 +63,7 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
     let interval: TimeInterval = 0.001
     gameTimer = Timer.schedule(repeatInterval: interval) { timer in
       self.game.time += interval
-      self.time = GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: self.game)
+      self.time.value = GameScoreboardEditorViewModelFromGame.timeRemainingPretty(for: self.game)
     }
   }
   
