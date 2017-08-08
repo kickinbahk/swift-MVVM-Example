@@ -16,7 +16,7 @@ class Dynamic<T> {
     self.listener = listener
   }
   
-  func bindAndFire(_ listener: Listener) {
+  func bindAndFire(_ listener: Listener?) {
     self.listener = listener
     listener?(value)
   }
