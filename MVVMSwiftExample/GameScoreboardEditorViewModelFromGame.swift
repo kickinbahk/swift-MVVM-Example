@@ -56,6 +56,31 @@ class GameScoreboardEditorViewModelFromGame: NSObject, GameScoreboardEditorViewM
     self.score = Dynamic(GameScoreboardEditorViewModelFromGame.scorePretty(for: game))
     self.isFinished = Dynamic(game.isFinished)
     self.isPaused = Dynamic(true)
+    
+    super.init()
+    subscribeToNotifications()
+  }
+  
+  deinit {
+    unsubscribeFromNotifications()
+  }
+  
+  fileprivate func subscribeToNotifications() {
+    NotificationCenter.default.addObserver(self, selector: #selector(gameScoreDidChangeNotification(_:)),
+                                           name: NSNotification.Name(rawValue: GameNotifications.GameScoreDidChangeNotification),
+                                           object: game)
+  }
+  
+  fileprivate func unsubscribeFromNotifications() {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  @objc fileprivate func gameScoreDidChangeNotification(_ notification: NSNotification) {
+    self.score.value = GameScoreboardEditorViewModelFromGame.scorePretty(for: game)
+    
+    if game.isFinished {
+      self.isFinished.value = true
+    }
   }
   
   fileprivate var gameTimer: Timer?
